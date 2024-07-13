@@ -10,7 +10,6 @@ import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 import { ValidationData, _parseValidationData } from "@account-abstraction/contracts/core/Helpers.sol";
 import { SenderCreator } from "@account-abstraction/contracts/core/SenderCreator.sol";
-import { UserOperation } from "@account-abstraction/contracts/interfaces/UserOperation.sol";
 import { IPaymaster } from "@account-abstraction/contracts/interfaces/IPaymaster.sol";
 import { INonceManager } from "@account-abstraction/contracts/interfaces/INonceManager.sol";
 import { UserOperationLib, UserOperation } from "@account-abstraction/contracts/interfaces/UserOperation.sol";

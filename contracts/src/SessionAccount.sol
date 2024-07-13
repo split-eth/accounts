@@ -5,6 +5,8 @@ pragma solidity ^0.8.20;
 /* solhint-disable no-inline-assembly */
 /* solhint-disable reason-string */
 
+import { console } from "forge-std/Test.sol";
+
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
