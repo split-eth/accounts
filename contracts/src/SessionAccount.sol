@@ -282,7 +282,7 @@ contract SessionAccount is
 
 	// related to ownership
 
-	function transferOwnership(address newOwner) public virtual override onlyAccountOwner {
+	function transferOwnership(address newOwner) public virtual override onlySessionAdmin {
 		_transferOwnership(newOwner);
 	}
 

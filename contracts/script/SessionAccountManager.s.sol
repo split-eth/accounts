@@ -28,7 +28,7 @@ contract SessionAccountManagerDeploy is Script {
 
 		bytes memory bytecode = getBytecode();
 
-		bytes32 salt = keccak256(abi.encodePacked("ETHGLOBAL_BRUSSELS_2024_SESSION_ACCOUNT_MANAGER"));
+		bytes32 salt = keccak256(abi.encodePacked("ETHGLOBAL_BRUSSELS_2024_SESSION_ACCOUNT_MANAGER_2"));
 
 		// Call eth_getCode to check the bytecode at the given address
 		address contractAddress = deployer.computeAddress(salt, bytecode);

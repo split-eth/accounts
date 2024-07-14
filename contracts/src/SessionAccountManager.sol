@@ -47,8 +47,8 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 		return keccak256(abi.encodePacked(otherFactory));
 	}
 
-	function getAccountHash(address provider, address owner, bytes32 salt) public pure returns (bytes32) {
-		return keccak256(abi.encodePacked(provider, owner, salt));
+	function getAccountHash(address provider, bytes32 salt) public pure returns (bytes32) {
+		return keccak256(abi.encodePacked(provider, salt));
 	}
 
 	/**
@@ -57,8 +57,8 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 	 * Note that during UserOperation execution, this method is called only if the account is not deployed.
 	 * This method returns an existing account address so that entryPoint.getSenderAddress() would work even after account creation
 	 */
-	function createAccount(address provider, address owner, bytes32 salt) public returns (SessionAccount ret) {
-		address addr = getAddress(provider, owner, salt);
+	function createAccount(address provider, bytes32 salt) public returns (SessionAccount ret) {
+		address addr = getAddress(provider, salt);
 
 		emit AccountCreated(addr);
 
@@ -67,13 +67,13 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 			return SessionAccount(payable(addr));
 		}
 
-		bytes32 accountHash = getAccountHash(provider, owner, salt);
+		bytes32 accountHash = getAccountHash(provider, salt);
 
 		ret = SessionAccount(
 			payable(
 				new ERC1967Proxy{ salt: accountHash }(
 					address(accountImplementation),
-					abi.encodeCall(SessionAccount.initialize, (provider, owner))
+					abi.encodeCall(SessionAccount.initialize, (provider, address(this)))
 				)
 			)
 		);
@@ -82,8 +82,8 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 	/**
 	 * calculate the counterfactual address of this account as it would be returned by createAccount()
 	 */
-	function getAddress(address provider, address owner, bytes32 salt) public view returns (address) {
-		bytes32 accountHash = getAccountHash(provider, owner, salt);
+	function getAddress(address provider, bytes32 salt) public view returns (address) {
+		bytes32 accountHash = getAccountHash(provider, salt);
 
 		return
 			Create2.computeAddress(
@@ -93,7 +93,7 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 						type(ERC1967Proxy).creationCode,
 						abi.encode(
 							address(accountImplementation),
-							abi.encodeCall(SessionAccount.initialize, (provider, owner))
+							abi.encodeCall(SessionAccount.initialize, (provider, address(this)))
 						)
 					)
 				)
@@ -104,22 +104,27 @@ contract SessionAccountManager is Initializable, OwnableUpgradeable, UUPSUpgrade
 
 	function startSession(
 		address provider,
-		address owner,
 		bytes32 salt,
 		address sessionAddress,
 		bytes memory providerSignature,
 		bytes memory signature
 	) public {
-		bytes32 accountHash = getAccountHash(provider, owner, salt);
+		bytes32 accountHash = getAccountHash(provider, salt);
 
 		address providerSigner = recoverSigner(accountHash, providerSignature);
-		address ownerSigner = recoverSigner(accountHash, signature);
+		address sessionSigner = recoverSigner(accountHash, signature);
 
-		if (providerSigner != provider || ownerSigner != owner) {
+		if (providerSigner != provider || sessionSigner != sessionAddress) {
 			revert InvalidSignature();
 		}
 
-		SessionAccount account = createAccount(provider, owner, salt);
+		address accountAddress = getAddress(provider, salt);
+		uint codeSize = accountAddress.code.length;
+		if (codeSize == 0) {
+			createAccount(provider, salt);
+		}
+
+		SessionAccount account = SessionAccount(payable(accountAddress));
 
 		account.startSession(sessionAddress, sessionDuration);
 	}

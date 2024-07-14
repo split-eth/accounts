@@ -1,0 +1,49 @@
+{
+    "community": {
+      "name": "Spliteth",
+      "description": "A community server for spliteth",
+      "url": "https://spliteth.xyz",
+      "alias": "bundler.spliteth.xyz",
+      "custom_domain": "bundler.spliteth.xyz",
+      "logo": "https://bundler.spliteth.xyz/uploads/logo.svg",
+      "theme": {
+        "primary": "#4a90e2"
+      }
+    },
+    "token": {
+      "standard": "erc20",
+      "name": "USDC",
+      "address": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "symbol": "USDC",
+      "decimals": 6
+    },
+    "scan": {
+      "url": "https://sepolia.basescan.org/",
+      "name": "Base Sepolia Explorer"
+    },
+    "node": {
+      "url": "https://base-sepolia-rpc.publicnode.com",
+      "ws_url": "wss://base-sepolia-rpc.publicnode.com",
+      "chain_id": 84532
+    },
+    "ipfs": {
+      "url": "https://ipfs.internal.citizenwallet.xyz"
+    },
+    "profile": {
+      "address": "0x32E86651ef0A8526633f71083DEcFFfEAB74Da7D"
+    },
+    "indexer": {
+      "url": "https://bundler.spliteth.xyz/indexer",
+      "ipfs_url": "https://bundler.spliteth.xyz/indexer",
+      "key": "x"
+    },
+    "erc4337": {
+      "rpc_url": "https://bundler.spliteth.xyz/indexer/rpc",
+      "paymaster_rpc_url": "https://bundler.spliteth.xyz/indexer/rpc",
+      "entrypoint_address": "0x293af11A12E023E96ABC4CF109Cc33E3A6278b87",
+      "paymaster_address": "0xC2C10f10e449c64191Eb659139CDF3b807Ad2128",
+      "account_factory_address": "0x3743B0Bd669A0068dEeCd8203a7239e226f4c216",
+      "paymaster_type": "cw"
+    },
+    "version": 1
+  }

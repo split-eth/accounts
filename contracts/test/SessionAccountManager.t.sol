@@ -122,7 +122,6 @@ contract SessionAccountManagerTest is Test {
 
 		account1 = sessionAccountManager.createAccount(
 			provider,
-			user1,
 			sessionAccountManager.getAccountSalt("test@provider.com")
 		);
 
@@ -141,8 +140,8 @@ contract SessionAccountManagerTest is Test {
 
 	function testAccountCreation() public {
 		bytes32 salt = sessionAccountManager.getAccountSalt("test");
-		SessionAccount account = sessionAccountManager.createAccount(provider, user1, salt);
-		address counterfactual = sessionAccountManager.getAddress(provider, user1, salt);
+		SessionAccount account = sessionAccountManager.createAccount(provider, salt);
+		address counterfactual = sessionAccountManager.getAddress(provider, salt);
 
 		assertTrue(address(account) != address(0));
 		assertEq(address(account), counterfactual);
@@ -244,12 +243,13 @@ contract SessionAccountManagerTest is Test {
 		UserOperation[] memory ops = new UserOperation[](1);
 		ops[0] = op;
 
+		vm.expectRevert();
 		tokenEntryPoint.handleOps(ops, payable(0));
 
 		vm.stopPrank();
 
 		balance = token.balanceOf(address(user1));
-		assertEq(balance, 110);
+		assertEq(balance, 100);
 	}
 
 	function testSession4337Transaction() public {
@@ -262,8 +262,9 @@ contract SessionAccountManagerTest is Test {
 		uint256 balance = token.balanceOf(address(user1));
 		assertEq(balance, 100);
 
-		vm.startPrank(user1);
+		vm.startPrank(provider);
 
+		// TODO: proper test case where everything is signed correctly
 		account1.startSession(session1, 30 days);
 
 		vm.stopPrank();
