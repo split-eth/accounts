@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     const phoneNumber = secondFactor;
     const message = `Your spliteth code: ${randomCharacters}`;
 
-    // await smsService.sendSMS(phoneNumber, message);
+    await smsService.sendSMS(phoneNumber, message);
     console.log(message);
 
     return Response.json(
